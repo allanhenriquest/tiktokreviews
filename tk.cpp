@@ -11,6 +11,10 @@ using namespace std;
 
 // Implementação do construtor e métodos de acesso
 
+TikTokReviews::TikTokReviews(){  
+     
+};
+
 
 TikTokReviews::TikTokReviews (string i, string t, double u, string a, string d){
         

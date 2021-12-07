@@ -5,114 +5,174 @@
 #include <stdio.h>
 #include "tk.cpp"
 
-
 using namespace std;
 
+void PreProcessamento(ifstream &csv, ofstream &bin)
+{
 
+    TikTokReviews r;
+    int bufSize = 10000000;
+    char *buffer = new char[bufSize];
+    string primeiraLinha;
+    getline(csv, primeiraLinha); //pula a primeira linha
+    csv.read(buffer, bufSize);
+    int campo = 0;
+    bool inCampoText = false;
 
-void LeDados (){
-   ifstream arq("teste.csv");
-   
-   if(arq.is_open())
+    //gcount() é o total de caracteres lidos
+
+    while (csv.gcount() > 0)
     {
-        cout << "Informacoes armazenadas no arquivo:\n\n***" << endl;
-        string stream super;
-        string temp = "";        
+
+        int ini = 0;
+        for (int pos = 0; pos < csv.gcount(); pos++)
+        {
+
+            if (buffer[pos] == ',')
+            {
+                if (!inCampoText)
+                {
+                    if (campo == 2)
+                    {
+
+                        int val = atoi(&buffer[ini]);
+                        bin.write(reinterpret_cast<const char *>(&atoi), sizeof(int));
+                        ini = pos + 1; // pula a vírgula
+                        campo = (campo + 1) % 5;
+                    }
+                    else
+                    {
+
+                        bin.write(&buffer[ini], pos - ini);
+                        ini = pos + 1; // pula a vírgula
+                        campo = (campo + 1) % 5;
+                    }          
+                }
+            } else if(buffer[pos] == '"') {
+                    
+
+                    
+            if (buffer[pos] == '"')
+            {
+                if (buffer[pos + 1] != '"')
+                {
+                    if (buffer[pos + 1] == ',')
+                    {
+                        // encerrando o campo text
+                        inCampoText = false;
+
+                        
+                    }
+                    else
+                    {
+                        // começando o campo text
+                        inCampoText = true;
+                    }
+                }
+               
+            }
+
+            }
+            // switch (campo)
+            // {
+
+            // case 0: // campo de id
+
+            //     if (buffer[pos] == ',')
+            //     {
+            //         bin.write(&buffer[ini], pos - ini);
+            //         ini = pos + 1; // pula a vírgula
+            //         campo = (campo + 1) % 5;
+            //         break;
+            //     }
+
+            // case 1: // campo de texto
+
+            //     if (buffer[pos] == ',' ||
+            //         buffer[ini] == '"' && buffer[pos] == '"' && buffer[pos] == ',')
+            //     {
+            //         bin.write(&buffer[ini], pos - ini);
+            //         ini = pos + 1; // pula a vírgula
+            //         campo = (campo + 1) % 5;
+            //         break;
+            //     }
+
+            // case 2: // campo de votos
+
+            //     if (buffer[pos] == ',')
+            //     {
+            //         int val = atoi(&buffer[ini]);
+            //         bin.write(reinterpret_cast<const char *>(&atoi), sizeof(int));
+            //         ini = pos + 1; // pula a vírgula
+            //         campo = (campo + 1) % 5;
+            //         break;
+            //     }
+
+            // case 3: // campo de versao do app
+
+            //     if (buffer[pos] == ',')
+            //     {
+            //         bin.write(&buffer[ini], pos - ini);
+            //         ini = pos + 1; // pula a vírgula
+            //         campo = (campo + 1) % 5;
+            //         break;
+            //     }
+
+            // case 4: // campo de data
+
+            //     if (buffer[pos] == ',')
+            //     {
+            //         bin.write(&buffer[ini], pos - ini);
+            //         ini = pos + 1; // pula a vírgula
+            //         campo = (campo + 1) % 5;
+            //         break;
+            //     }
+
+            //     return;
+            // }
+        }
+
+        csv.read(buffer, bufSize);
+    }
+
+    bin.close();
+    csv.close();
+}
+
+void readCharbyChar()
+{
+
+    ifstream file("teste.csv");
+    ofstream printer;
+
+    printer.open("outfile.txt", ios::out);
+
+    if (file.is_open())
+    {
+
         string id;
         string text;
         string votes;
         string version;
         string date;
-        
-          
-        text = "";
-        getline(arq,id,',');
-        
-        getline(arq,super,'"');
-        getline(arq,super,'"');
-        
-        for (int i=0; i < (int)super.size(); i++){
-           
-           if ( super[i] != ',' )
-           {
-               cout << "Entreou no if" << endl;
-               text += super[i];
-                              
-           }else{
-             text += " ";                              
-          }         
-               
-        }
-        getline(arq,votes,',');
-        getline (arq,version, ',');
-        getline(arq,date,'\n');
-        
-        //cout << temp << endl;
-        
-        
-        cout << "-------------------" << endl;
-        cout << "Imprimindo a Review" << endl;
-        cout << "-------------------" << endl;
-        cout << "Id: " << id << endl;
-        cout << "Texto: " << text << endl;
-        cout << "Votos: " << votes << endl;
-        cout << "Versao do App: " << version << endl;
-        cout << "Data da Review: " << date << endl;
-        cout << "-------------------" << endl;
-        cout << "Fim"<< endl;
-        cout << "-------------------" << endl;
-        
-        // ERRO: irá gerar lixo de memória, pois val irá armazenar todos os dígitos na sequência
-        //int intval; 
-        //arq >> intval;
-        // cout << str << '\n' << val << '\n' << intval << endl;
-        
-        cout << "\n***" << endl;
-        
-    
-       
-         
-    }
 
+        char data;
 
-    else
-        cerr << "ERRO: O arquivo nao pode ser aberto!" << endl;
-}
+        while (!file.eof())
+        {
 
+            // form id string
+            while (data != '\n')
+            {
+                //cout << data;
+                file.get(data);
+                id += data;
+            }
+            cout << endl;
+            cout << "Id: " << id << endl;
+            printer << "Id: " << id << endl;
 
-
-void readCharbyChar(){
-
-    ifstream file ("teste.csv");
-    ofstream printer;
-
-    printer.open( "outfile.txt", ios::out);
-    
-    if (file.is_open()){
-    
-    string id;
-    string text;
-    string votes;
-    string version;
-    string date;
-    
-    char data;
-
-    while (!file.eof()){
-    
-    // form id string
-    while (data != '\n')
-    {
-        //cout << data;
-        file.get(data);
-        id += data;
-    }
-    cout << endl;
-    cout << "Id: " << id << endl;
-    printer << "Id: " << id<< endl;
-
-
-/**
+            /**
     // form text string
     if (data == '"'){
     
@@ -165,20 +225,20 @@ void readCharbyChar(){
     cout << "Date: " << date << endl;
     cout << "----------------------------------------------" << endl;
   
-   **/ 
+   **/
+        }
     }
-
-    }
-    else 
-     cerr << "ERRO: O arquivo nao pode ser aberto!" << endl;
-
+    else
+        cerr << "ERRO: O arquivo nao pode ser aberto!" << endl;
 }
 
+int main()
+{
 
+    ifstream csv("teste.csv");
+    ofstream bin("binario.bin");
 
-int main(){
+    PreProcessamento(csv, bin);
 
-    LeDados();
     return 0;
 }
-

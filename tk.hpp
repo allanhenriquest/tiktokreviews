@@ -22,6 +22,7 @@ class TikTokReviews {
 
     //Class Constructor
 
+    TikTokReviews();
     TikTokReviews (string i, string t, double u, string a, string d);
 
     std::string getId();
