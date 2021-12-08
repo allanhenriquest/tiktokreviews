@@ -13,17 +13,20 @@ void PreProcessamento(ifstream &csv, ofstream &bin)
     TikTokReviews r;
     int bufSize = 10000000;
     char *buffer = new char[bufSize];
-    string primeiraLinha;
-    getline(csv, primeiraLinha); //pula a primeira linha
+    //string primeiraLinha;
+    //getline(csv, primeiraLinha); //pula a primeira linha
     csv.read(buffer, bufSize);
     int campo = 0;
     bool inCampoText = false;
-
+    bin << buffer << endl;
     //gcount() é o total de caracteres lidos
+
+
+   
 
     while (csv.gcount() > 0)
     {
-
+        
         int ini = 0;
         for (int pos = 0; pos < csv.gcount(); pos++)
         {
@@ -34,43 +37,71 @@ void PreProcessamento(ifstream &csv, ofstream &bin)
                 {
                     if (campo == 2)
                     {
-
-                        int val = atoi(&buffer[ini]);
-                        bin.write(reinterpret_cast<const char *>(&atoi), sizeof(int));
-                        ini = pos + 1; // pula a vírgula
-                        campo = (campo + 1) % 5;
-                    }
-                    else
-                    {
-
+                        cout << "entrou campo 2" << endl;
+                        //int val = atoi(&buffer[ini]);
+                        //bin.write(reinterpret_cast<const char *>(&atoi), sizeof(int));
                         bin.write(&buffer[ini], pos - ini);
                         ini = pos + 1; // pula a vírgula
+                        cout << "Valor de ini: " << ini << endl;
                         campo = (campo + 1) % 5;
-                    }          
-                }
-            } else if(buffer[pos] == '"') {
-                    
-
-                    
-            if (buffer[pos] == '"')
-            {
-                if (buffer[pos + 1] != '"')
-                {
-                    if (buffer[pos + 1] == ',')
-                    {
-                        // encerrando o campo text
-                        inCampoText = false;
-
-                        
+                        bin << endl;
+                        cout << "Valor de pos: "<< pos << endl;
                     }
                     else
                     {
-                        // começando o campo text
-                        inCampoText = true;
+                        cout << "Campo atual: " << campo << endl;
+                        bin.write(&buffer[ini], pos - ini);
+                        ini = pos + 1; // pula a vírgula
+                        cout << "Valor de ini: " << ini << endl;
+                        campo = (campo + 1) % 5;
+                        cout << "Proximo Campo: " << campo << endl;
+                        bin << endl;
+                        cout << "Valor de pos: "<< pos << endl;
                     }
                 }
-               
             }
+            else if (buffer[pos] == '"')
+
+            {   
+                
+                if ( buffer[pos] == '"') {        
+                    if (buffer[pos + 1] != '"')
+                    {
+                        if (buffer[pos + 1] == ',')
+                        {
+                            // encerrando o campo text
+                            cout << "Encerrando Campo Text" << endl;
+                            inCampoText = false;
+                        }
+                        else
+                        {
+                            // começando o campo text
+                            cout << " Campo Text Identificado " << endl;
+                            inCampoText = true;
+                            cout << "Campo atual: " << campo << endl;
+                            bin.write(&buffer[ini], pos - ini);
+                            ini = pos + 1; // pula a vírgula
+                            cout << "Valor de ini: " << ini << endl;
+                            campo = (campo + 1) % 5;
+                            cout << "Proximo Campo: " << campo << endl;
+                            bin << endl;
+                            cout << "Valor de pos: "<< pos << endl;
+                        }
+                    }
+                }
+                
+            } else if (buffer[pos] == '\n'){
+
+                cout << "Campo atual: " << campo << endl;
+                        bin.write(&buffer[ini], pos - ini);
+                        ini = pos + 1; // pula a vírgula
+                        cout << "Valor de ini: " << ini << endl;
+                        campo = (campo + 1) % 5;
+                        cout << "Proximo Campo: " << campo << endl;
+                        inCampoText = false;
+                        bin << endl;
+                        cout << "Valor de pos: "<< pos << endl;
+                       
 
             }
             // switch (campo)
