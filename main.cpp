@@ -25,12 +25,13 @@ void PreProcessamento2()
 {
 
     // Declarar Variaveis
-    ofstream registraTeste("registroTeste2.txt");
-    FILE *csv = fopen("teste30.csv", "r");
+    ofstream registraTeste("registroTeste3.txt");
+    FILE *csv = fopen("teste.csv", "r");
     int i, j;
-    char aux[1000000000], linha[1000000000];
+    char aux[10000], linha[100000];
     TikTokReviews r;
-    int contalinhas = 0;
+    int contadorLinhas = 0;
+
     //Descarta o cabeçalho
     char primeiraLinha[100];
     fgets(primeiraLinha, 54, csv);
@@ -38,16 +39,17 @@ void PreProcessamento2()
     registraTeste << "------------------------------------------------" << endl;
 
     //Laco de repeticao le a linha caracter por caracter, armezanando os campos
-    while (fgets(linha, 100000, csv) != NULL)
+    while (fgets(linha, 1000, csv) != NULL)
     {
-        contalinhas++;
+        contadorLinhas++;
+        
         i = 0;                                     //contador do caracter igual a 0;
         j = 0;                                     // contador auxiliar igual a zero;
         while (linha[i] != 'g' && linha[i] != '"') //descarta lixo de memoria;
             i++;
-        cout << "Primeiro caractere da linha: " << linha[i] << endl; // verifica se ouve leitura de lixo de memoria
+        cout << "Primeiro caractere da linha: " << linha[i] << endl; // verifica se houve leitura de lixo de memoria
         cout << linha << endl;                                       // imprime a linha no console para verificar se está correta;
-        if (linha[i] != '"')// descarta eventuais aspas inicias;
+        if (linha[i] != '"')
         { 
 
             // ----------------------------------------------------------------------------------------------------------
@@ -162,6 +164,10 @@ void PreProcessamento2()
             aux[j] = '\0';
             registraTeste << "Valor do DATA: " << aux << endl;
             registraTeste << "-----------------------------------------------" << endl;
+            registraTeste << "############################################### " << endl;
+            registraTeste << "Linhas Lidas: " << contadorLinhas << endl;
+            registraTeste << "############################################### " << endl;
+
             cout << "data: " << aux << endl;
             r.setDate(aux);
             cout << "r.date: " << r.getDate() << endl;
@@ -247,10 +253,12 @@ void PreProcessamento2()
             cout << "r.date: " << r.getDate() << endl;
         }
     }
+
     
     registraTeste << "------------------------------------------ " << endl;
-    registraTeste << "Total de Linhas Lidas: " << contalinhas << endl;
-    
+    registraTeste << "Linhas Lidas: " << contadorLinhas << endl;
+    registraTeste << "------------------------------------------ " << endl;
+
     registraTeste.close();
 }
 
@@ -261,8 +269,8 @@ void PreProcessamento(ifstream &csv, ofstream &bin)
     TikTokReviews r;
     int bufSize = 10000000;
     char *buffer = new char[bufSize];
-    //string primeiraLinha;
-    //getline(csv, primeiraLinha); //pula a primeira linha
+    string primeiraLinha;
+    getline(csv, primeiraLinha); //pula a primeira linha
     csv.read(buffer, bufSize);
     int campo = 0;
     bool inCampoText = false;
@@ -421,105 +429,18 @@ void PreProcessamento(ifstream &csv, ofstream &bin)
     csv.close();
 }
 
-void readCharbyChar()
-{
 
-    ifstream file("teste.csv");
-    ofstream printer;
-
-    printer.open("outfile.txt", ios::out);
-
-    if (file.is_open())
-    {
-
-        string id;
-        string text;
-        string votes;
-        string version;
-        string date;
-
-        char data;
-
-        while (!file.eof())
-        {
-
-            // form id string
-            while (data != '\n')
-            {
-                //cout << data;
-                file.get(data);
-                id += data;
-            }
-            cout << endl;
-            cout << "Id: " << id << endl;
-            printer << "Id: " << id << endl;
-
-            /**
-    // form text string
-    if (data == '"'){
-    
-    while (data != '"')
-    {
-        cout << data;
-        file.get(data);
-        text += data;
-    }
-    cout << endl;
-    
-    }else{
-        while (data != '"')
-    {
-        cout << data;
-        file.get(data);
-        text += data;
-    }
-    cout << endl;
-    }
-    cout << "Text: " << text << endl;
-
-    // form Votes string
-    while (data != ',')
-    {
-        cout << data;
-        file.get(data);
-        votes += data;
-    }
-    cout << endl;
-    cout << "Votes: " << votes << endl;
-
-    // form App Version Data
-    while (data != ',')
-    {
-        cout << data;
-        file.get(data);
-        version += data;
-    } cout << endl;
-    cout << "App Version: " << version << endl;
-
-    // form Date Data
-    while (data != '\n')
-    {
-        cout << data;
-        file.get(data);
-        date += data;
-    } 
-    cout << endl;
-    cout << "Date: " << date << endl;
-    cout << "----------------------------------------------" << endl;
-  
-   **/
-        }
-    }
-    else
-        cerr << "ERRO: O arquivo nao pode ser aberto!" << endl;
-}
 
 int main()
 {
 
     FILE *bin = fopen("binario.bin", "w");
+    ofstream bina("registrer.bin");
+    ifstream csv("teste.bin");
 
-    PreProcessamento2();
+    PreProcessamento(csv,bina);
+
+    //PreProcessamento2();
 
     return 0;
 }
