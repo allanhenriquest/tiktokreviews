@@ -25,10 +25,10 @@ void PreProcessamento2()
 {
 
     // Declarar Variaveis
-    ofstream registraTeste("registroTeste3.txt");
+    ofstream registraTeste("registroTeste.txt");
     FILE *csv = fopen("teste.csv", "r");
     int i, j;
-    char aux[10000], linha[100000];
+    char aux[10000], linha[10000];
     TikTokReviews r;
     int contadorLinhas = 0;
 
@@ -435,12 +435,11 @@ int main()
 {
 
     FILE *bin = fopen("binario.bin", "w");
-    ofstream bina("registrer.bin");
     ifstream csv("teste.bin");
 
-    PreProcessamento(csv,bina);
+    PreProcessamento2();
 
-    //PreProcessamento2();
+    
 
     return 0;
 }
