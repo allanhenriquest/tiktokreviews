@@ -16,7 +16,7 @@ TikTokReviews::TikTokReviews(){
 };
 
 
-TikTokReviews::TikTokReviews (string i, string t, double u, string a, string d){
+TikTokReviews::TikTokReviews (string i, string t, int u, string a, string d){
         
      id = i;
      text = t;
@@ -42,11 +42,11 @@ TikTokReviews::TikTokReviews (string i, string t, double u, string a, string d){
         text = t;
     };
 
-    double TikTokReviews::getUpvotes(){
+    int TikTokReviews::getUpvotes(){
         return upvotes;
     };
     
-    void TikTokReviews::setUpvotes(double u){
+    void TikTokReviews::setUpvotes(int u){
         upvotes = u;
     };
 

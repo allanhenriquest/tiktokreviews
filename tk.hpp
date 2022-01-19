@@ -14,7 +14,7 @@ class TikTokReviews {
     
     string id;
     string text;
-    double upvotes;
+    int upvotes;
     string app_version;
     string date;
 
@@ -23,7 +23,7 @@ class TikTokReviews {
     //Class Constructor
 
     TikTokReviews();
-    TikTokReviews (string i, string t, double u, string a, string d);
+    TikTokReviews (string i, string t, int u, string a, string d);
 
     std::string getId();
     void setId(string id);
@@ -31,8 +31,8 @@ class TikTokReviews {
     std::string getText();
     void setText(string text);
 
-    double getUpvotes();
-    void setUpvotes(double upvotes);
+    int getUpvotes();
+    void setUpvotes(int upvotes);
 
     std::string getAppVersion();
     void setAppVersion(string app_version);
